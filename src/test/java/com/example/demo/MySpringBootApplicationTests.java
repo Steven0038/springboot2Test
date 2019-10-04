@@ -83,7 +83,15 @@ public class MySpringBootApplicationTests {
         ayUserService.save(ayUser);
         // 刪除數據
         ayUserService.delete("3");
+    }
 
+    @Test
+    public void testTransaction(){
+        AyUser ayUser = new AyUser();
+        ayUser.setId("3");
+        ayUser.setName("阿華");
+        ayUser.setPassword("123");
+        ayUserService.save(ayUser);
     }
 
 

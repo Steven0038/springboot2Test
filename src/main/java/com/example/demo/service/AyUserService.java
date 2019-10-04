@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface AyUserService {
     Optional<AyUser> findById(String id);
+
     List<AyUser> findAll();
 
     List<AyUser> findByName(String name);

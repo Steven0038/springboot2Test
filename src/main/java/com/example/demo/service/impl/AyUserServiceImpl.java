@@ -8,10 +8,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * user service implement class
+ */
+@Transactional
 @Service
 public class AyUserServiceImpl implements AyUserService {
 
@@ -48,9 +53,16 @@ public class AyUserServiceImpl implements AyUserService {
         return ayUserRepository.findAll(pageable);
     }
 
+    @Transactional
     @Override
     public AyUser save(AyUser ayUser) {
-        return ayUserRepository.save(ayUser);
+        AyUser saveUser = ayUserRepository.save(ayUser);
+
+        // null pointer exception, 測試 transaction rollback, 如果有 @Transacton 就會 rollback 不會 insert
+//        String error = null;
+//        error.split("/");
+
+        return saveUser;
     }
 
     @Override
