@@ -31,7 +31,7 @@ public class MySpringBootApplicationTests {
     }
 
     @Test
-    public void mySqlTest(){
+    public void mySqlTest() {
         String sql = "select id, name, password from ay_user";
         List<AyUser> userList = jdbcTemplate.query(sql, new RowMapper<AyUser>() {
             @Override
@@ -44,7 +44,7 @@ public class MySpringBootApplicationTests {
             }
         });
         System.out.println("查詢成功");
-        for(AyUser user : userList){
+        for (AyUser user : userList) {
             System.out.println("[id]:" + user.getId() + ", [name]:" + user.getName());
         }
     }
@@ -53,7 +53,7 @@ public class MySpringBootApplicationTests {
     private AyUserService ayUserService;
 
     @Test
-    public void testRepository(){
+    public void testRepository() {
         // 查詢所有數據
         List<AyUser> userList = ayUserService.findAll();
         System.out.println("findAll():" + userList.size());
@@ -74,7 +74,7 @@ public class MySpringBootApplicationTests {
         // 分頁查詢數據
         PageRequest pageRequest = new PageRequest(0, 10);
         Page<AyUser> userList5 = ayUserService.findAll(pageRequest);
-        System.out.println("page findAll():" + userList5.getTotalPages() + "/" +userList5.getSize());
+        System.out.println("page findAll():" + userList5.getTotalPages() + "/" + userList5.getSize());
         // 新增數據
         AyUser ayUser = new AyUser();
         ayUser.setId("3");
@@ -86,7 +86,7 @@ public class MySpringBootApplicationTests {
     }
 
     @Test
-    public void testTransaction(){
+    public void testTransaction() {
         AyUser ayUser = new AyUser();
         ayUser.setId("3");
         ayUser.setName("阿華");
