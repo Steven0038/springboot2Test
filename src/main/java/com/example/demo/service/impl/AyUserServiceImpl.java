@@ -5,6 +5,7 @@ import com.example.demo.repository.AyUserRepository;
 import com.example.demo.service.AyUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,9 +24,29 @@ public class AyUserServiceImpl implements AyUserService {
     @Resource(name = "ayUserRepository")
     private AyUserRepository ayUserRepository;
 
+    @Resource
+    private RedisTemplate redisTemplate;
+
+    private static final String ALL_USER = "ALL_USER_LIST";
+
     @Override
     public Optional<AyUser> findById(String id) {
-        return ayUserRepository.findById(id);
+        // step.1 查詢 Redis 緩存的所有數據
+        List<AyUser> ayUserList = redisTemplate.opsForList().range(ALL_USER, 0, -1);
+        if (ayUserList != null && ayUserList.size() > 0) {
+            for (AyUser ayUser : ayUserList) {
+                if (ayUser.getId().equals(id)) {
+                    return Optional.of(ayUser);
+                }
+            }
+        }
+        // step.2 如果 Redis 找不到就查詢數據庫中的數據
+        Optional<AyUser> ayUsers = ayUserRepository.findById(id);
+        if (ayUsers.isPresent()) {
+            // step.3 將數據插入緩存中
+            redisTemplate.opsForList().leftPush(ALL_USER, ayUsers.get());
+        }
+        return ayUsers;
     }
 
     @Override

@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -18,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -92,6 +95,48 @@ public class MySpringBootApplicationTests {
         ayUser.setName("阿華");
         ayUser.setPassword("123");
         ayUserService.save(ayUser);
+    }
+
+    @Resource
+    private RedisTemplate redisTemplate;
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Test
+    public void testRedis() {
+        // 增加 Key:name, value:ay
+        redisTemplate.opsForValue().set("name", "ay");
+        String name = (String) redisTemplate.opsForValue().get("name");
+        System.out.println(name);
+        // 刪除
+        redisTemplate.delete("name");
+        // 更新
+        redisTemplate.opsForValue().set("name", "al");
+        // 查詢
+        name = stringRedisTemplate.opsForValue().get("name");
+        System.out.println("name");
+    }
+
+    @Test
+    public void testFindById() {
+        Long redisUserSize = 0L;
+        // 查詢 id = 1 的數據, 該數據存在於 Redis 緩存中
+        Optional<AyUser> ayUser = ayUserService.findById("1");
+        redisUserSize = redisTemplate.opsForList().size("ALL_USER_LIST");
+        System.out.println("目前緩存中的用戶數量: " + redisUserSize);
+        System.out.println("--->>> id: " + ayUser.get().getId() + " name: " + ayUser.get().getName());
+        // 查詢 id = 2 的數據, 該數據存在於 Redis 緩存中
+        Optional<AyUser> ayUser1 = ayUserService.findById("2");
+        redisUserSize = redisTemplate.opsForList().size("ALL_USER_LIST");
+        System.out.println("目前緩存中的用戶數量: " + redisUserSize);
+        System.out.println("--->>> id: " + ayUser1.get().getId() + " name: " + ayUser1.get().getName());
+        // 查詢 id = 4 的用戶, 該數據僅存於資料庫中
+        // 所以會從 DB 更新到緩存中
+        Optional<AyUser> ayUser3 = ayUserService.findById("4");
+        redisUserSize = redisTemplate.opsForList().size("ALL_USER_LIST");
+        System.out.println("目前緩存中的用戶數量: " + redisUserSize);
+        System.out.println("--->>> id: " + ayUser3.get().getId() + " name: " + ayUser3.get().getName());
     }
 
 
