@@ -3,6 +3,8 @@ package com.example.demo.service.impl;
 import com.example.demo.model.AyUser;
 import com.example.demo.repository.AyUserRepository;
 import com.example.demo.service.AyUserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,6 +30,8 @@ public class AyUserServiceImpl implements AyUserService {
     private RedisTemplate redisTemplate;
 
     private static final String ALL_USER = "ALL_USER_LIST";
+
+    Logger logger = LogManager.getLogger(this.getClass());
 
     @Override
     public Optional<AyUser> findById(String id) {
@@ -89,6 +93,7 @@ public class AyUserServiceImpl implements AyUserService {
     @Override
     public void delete(String id) {
         ayUserRepository.deleteById(id);
+        logger.info("userId: " + id +" 用戶被刪除");
     }
 
 

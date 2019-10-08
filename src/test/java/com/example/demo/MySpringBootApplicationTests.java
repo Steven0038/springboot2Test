@@ -2,6 +2,8 @@ package com.example.demo;
 
 import com.example.demo.model.AyUser;
 import com.example.demo.service.AyUserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +30,7 @@ public class MySpringBootApplicationTests {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
+    Logger logger = LogManager.getLogger(this.getClass());
 
     @Test
     public void contextLoads() {
@@ -137,6 +140,12 @@ public class MySpringBootApplicationTests {
         redisUserSize = redisTemplate.opsForList().size("ALL_USER_LIST");
         System.out.println("目前緩存中的用戶數量: " + redisUserSize);
         System.out.println("--->>> id: " + ayUser3.get().getId() + " name: " + ayUser3.get().getName());
+    }
+
+    @Test
+    public void testLog4j() {
+        ayUserService.delete("4");
+        logger.info("delete success!!!");
     }
 
 
