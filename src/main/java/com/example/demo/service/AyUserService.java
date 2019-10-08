@@ -20,8 +20,13 @@ public interface AyUserService {
 
     List<AyUser> findByIdIn(Collection<String> ids);
 
+    //mybatis
+    AyUser findByNameAndPassword(String name, String password);
+
     AyUser save(AyUser ayUser);
+
     void delete(String id);
+
     //分頁
     Page<AyUser> findAll(Pageable pageable);
 }

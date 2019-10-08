@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dao.AyUserDao;
 import com.example.demo.model.AyUser;
 import com.example.demo.repository.AyUserRepository;
 import com.example.demo.service.AyUserService;
@@ -19,7 +20,7 @@ import java.util.Optional;
 /**
  * user service implement class
  */
-@Transactional
+//@Transactional
 @Service
 public class AyUserServiceImpl implements AyUserService {
 
@@ -28,6 +29,9 @@ public class AyUserServiceImpl implements AyUserService {
 
     @Resource
     private RedisTemplate redisTemplate;
+
+    @Resource
+    private AyUserDao ayUserDao;
 
     private static final String ALL_USER = "ALL_USER_LIST";
 
@@ -73,10 +77,17 @@ public class AyUserServiceImpl implements AyUserService {
         return ayUserRepository.findByIdIn(ids);
     }
 
+    // Mybatis
+    @Override
+    public AyUser findByNameAndPassword(String name, String password) {
+        return ayUserDao.findByNameAndPassword(name, password);
+    }
+
     @Override
     public Page<AyUser> findAll(Pageable pageable) {
         return ayUserRepository.findAll(pageable);
     }
+
 
     @Transactional
     @Override

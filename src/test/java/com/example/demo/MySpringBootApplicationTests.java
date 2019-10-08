@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.dao.AyUserDao;
 import com.example.demo.model.AyUser;
 import com.example.demo.service.AyUserService;
 import org.apache.logging.log4j.LogManager;
@@ -146,6 +147,12 @@ public class MySpringBootApplicationTests {
     public void testLog4j() {
         ayUserService.delete("4");
         logger.info("delete success!!!");
+    }
+
+    @Test
+    public void testMybatis(){
+        AyUser ayUser = ayUserService.findByNameAndPassword("steven", "12456");
+        logger.info("testMybatis-->"+ ayUser.getId() + ", " +ayUser.getName());
     }
 
 
