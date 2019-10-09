@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dao.AyUserDao;
+import com.example.demo.model.AyMood;
 import com.example.demo.model.AyUser;
 import com.example.demo.repository.AyUserRepository;
 import com.example.demo.service.AyUserService;
@@ -9,13 +10,16 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Future;
 
 /**
  * user service implement class
@@ -59,7 +63,33 @@ public class AyUserServiceImpl implements AyUserService {
 
     @Override
     public List<AyUser> findAll() {
-        return ayUserRepository.findAll();
+        try {
+            System.out.println("開始作任務");
+            long start = System.currentTimeMillis();
+            List<AyUser> ayUsers = ayUserRepository.findAll();
+            long end = System.currentTimeMillis();
+            System.out.println("完成任務, 耗時: " + (end - start) + "毫秒");
+            return ayUsers;
+        } catch (Exception e) {
+            logger.error("method [findAll] error ", e);
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public Future<List<AyUser>> findAsynAll() {
+        try {
+            System.out.println("開始作任務");
+            long start = System.currentTimeMillis();
+            List<AyUser> ayUsers = ayUserRepository.findAll();
+            long end = System.currentTimeMillis();
+            System.out.println("完成任務, 耗時: " + (end - start) + "毫秒");
+
+            return new AsyncResult<List<AyUser>>(ayUsers);
+        } catch (Exception e) {
+            logger.error("method [findAll] error", e);
+            return new AsyncResult<List<AyUser>>(null);
+        }
     }
 
     @Override
@@ -104,7 +134,7 @@ public class AyUserServiceImpl implements AyUserService {
     @Override
     public void delete(String id) {
         ayUserRepository.deleteById(id);
-        logger.info("userId: " + id +" 用戶被刪除");
+        logger.info("userId: " + id + " 用戶被刪除");
     }
 
 

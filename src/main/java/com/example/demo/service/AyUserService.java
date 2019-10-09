@@ -8,11 +8,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Future;
 
 public interface AyUserService {
     Optional<AyUser> findById(String id);
 
     List<AyUser> findAll();
+
+    // 異步查詢
+    Future<List<AyUser>> findAsynAll();
 
     List<AyUser> findByName(String name);
 
