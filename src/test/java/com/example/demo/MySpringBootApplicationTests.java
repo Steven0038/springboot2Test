@@ -201,14 +201,14 @@ public class MySpringBootApplicationTests {
 
     @Test
     public void testAsync() {
-        Long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         System.out.println("第一次查詢所有用戶!");
         List<AyUser> ayUsers = ayUserService.findAll();
         System.out.println("第二次查詢所有用戶!");
         List<AyUser> ayUsers2 = ayUserService.findAll();
         System.out.println("第三次查詢所有用戶!");
         List<AyUser> ayUsers3 = ayUserService.findAll();
-        Long endTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();
         System.out.println("總共消耗" + (endTime - startTime) + "毫秒");
     }
 
