@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dao.AyUserDao;
+import com.example.demo.error.BusinessException;
 import com.example.demo.model.AyMood;
 import com.example.demo.model.AyUser;
 import com.example.demo.repository.AyUserRepository;
@@ -10,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
@@ -111,6 +114,13 @@ public class AyUserServiceImpl implements AyUserService {
     @Override
     public AyUser findByNameAndPassword(String name, String password) {
         return ayUserDao.findByNameAndPassword(name, password);
+    }
+
+    @Override
+    @Retryable(value = {BusinessException.class}, maxAttempts = 5, backoff = @Backoff(delay = 500, multiplier = 2))
+    public AyUser findByNameAndPasswordRetry(String name, String password) {
+        System.out.println("[findByNameAndPasswordRetry] 方法失敗重試了! ");
+        throw new BusinessException();
     }
 
     @Override

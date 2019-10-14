@@ -27,6 +27,8 @@ public interface AyUserService {
     //mybatis
     AyUser findByNameAndPassword(String name, String password);
 
+    AyUser findByNameAndPasswordRetry(String name, String password);
+
     AyUser save(AyUser ayUser);
 
     void delete(String id);
