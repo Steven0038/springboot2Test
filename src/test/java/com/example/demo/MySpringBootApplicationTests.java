@@ -3,8 +3,10 @@ package com.example.demo;
 import com.example.demo.dao.AyUserDao;
 import com.example.demo.model.AyMood;
 import com.example.demo.model.AyUser;
+import com.example.demo.model.AyUserAttachmentRel;
 import com.example.demo.producer.AyMoodProducer;
 import com.example.demo.service.AyMoodService;
+import com.example.demo.service.AyUserAttachmentRelService;
 import com.example.demo.service.AyUserService;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.logging.log4j.LogManager;
@@ -221,8 +223,8 @@ public class MySpringBootApplicationTests {
         Future<List<AyUser>> ayUsers2 = ayUserService.findAsynAll();
         System.out.println("第三次查詢所有用戶!");
         Future<List<AyUser>> ayUsers3 = ayUserService.findAsynAll();
-        while (true){
-            if (ayUsers.isDone() && ayUsers2.isDone() && ayUsers3.isDone()){
+        while (true) {
+            if (ayUsers.isDone() && ayUsers2.isDone() && ayUsers3.isDone()) {
                 break;
             } else {
                 Thread.sleep(10);
@@ -230,6 +232,19 @@ public class MySpringBootApplicationTests {
         }
         long endTime = System.currentTimeMillis();
         System.out.println("總共消耗" + (endTime - startTime) + "毫秒");
+    }
+
+    @Resource
+    private AyUserAttachmentRelService ayUserAttachmentRelService;
+
+    @Test
+    public void testMongoDB() {
+        AyUserAttachmentRel ayUserAttachmentRel = new AyUserAttachmentRel();
+        ayUserAttachmentRel.setId("1");
+        ayUserAttachmentRel.setUserId("1");
+        ayUserAttachmentRel.setFileName("個人簡歷.doc");
+        ayUserAttachmentRelService.save(ayUserAttachmentRel);
+        System.out.println("保存成功");
     }
 
 }
