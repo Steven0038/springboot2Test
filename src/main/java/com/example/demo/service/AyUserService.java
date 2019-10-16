@@ -29,6 +29,8 @@ public interface AyUserService {
 
     AyUser findByNameAndPasswordRetry(String name, String password);
 
+    AyUser findByUserName(String name);
+
     AyUser save(AyUser ayUser);
 
     void delete(String id);

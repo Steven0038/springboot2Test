@@ -124,6 +124,15 @@ public class AyUserServiceImpl implements AyUserService {
     }
 
     @Override
+    public AyUser findByUserName(String name) {
+        List<AyUser> ayUsers = findByName(name);
+        if (ayUsers == null && ayUsers.size() <= 0) {
+            return null;
+        }
+        return ayUsers.get(0);
+    }
+
+    @Override
     public Page<AyUser> findAll(Pageable pageable) {
         return ayUserRepository.findAll(pageable);
     }
