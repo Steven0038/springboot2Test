@@ -32,10 +32,10 @@ public class SendMailQuartz {
     // 每 5 秒執行一次
     @Scheduled(cron = "*/5 * *  * * *")
     public void reportCurrentByCron() {
-        List<AyUser> ayUsers =  ayUserService.findAll();
-        if (ayUsers == null || ayUsers.size() <= 0){return;}
-        // 發送郵件
-        sendJunkMailService.sendJunkMail(ayUsers);
+//        List<AyUser> ayUsers =  ayUserService.findAll();
+//        if (ayUsers == null || ayUsers.size() <= 0){return;}
+//        // 發送郵件
+//        sendJunkMailService.sendJunkMail(ayUsers);
         logger.info("定時器運行了!!!");
     }
 }

@@ -49,7 +49,7 @@ public class CustomUserService implements UserDetailsService {
         if (ayUserRoleRels != null && ayUserRoleRels.size() > 0) {
             for (AyUserRoleRel ayUserRoleRel : ayUserRoleRels) {
                 // 獲取用戶角色名稱
-                String roleName =  ayRoleService.find(ayUserRoleRel.getRoleId()).getName();
+                String roleName = ayRoleService.find(ayUserRoleRel.getRoleId()).getName();
                 authorities.add(new SimpleGrantedAuthority(roleName));
             }
         }
